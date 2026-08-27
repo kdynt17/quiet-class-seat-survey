@@ -4,66 +4,57 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#173f35" />
-    <meta
-      name="description"
-      content="27명이 앉고 싶은 자리의 순위를 정하고 모두의 선호도를 반영해 공정하게 자리를 배치하는 웹 투표"
-    />
-    <meta property="og:title" content="우리 반 자리 투표" />
-    <meta
-      property="og:description"
-      content="앉고 싶은 자리를 직접 고르고, 모두의 희망을 골고루 반영해요."
-    />
+    <meta name="description" content="27명이 가장 앉기 싫은 자리부터 순위를 정하고 Google Sheets에 함께 저장하는 우리 반 자리 조사" />
+    <meta property="og:title" content="우리 반 기피 자리 조사" />
+    <meta property="og:description" content="가장 앉기 싫은 자리부터 1~27순위로 골라요." />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:url" content="https://kdynt17.github.io/quiet-class-seat-survey/" />
     <meta property="og:image" content="https://kdynt17.github.io/quiet-class-seat-survey/og.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="우리 반 자리 투표" />
-    <meta name="twitter:description" content="앉고 싶은 자리를 직접 고르고, 모두의 희망을 골고루 반영해요." />
+    <meta name="twitter:title" content="우리 반 기피 자리 조사" />
+    <meta name="twitter:description" content="가장 앉기 싫은 자리부터 1~27순위로 골라요." />
     <meta name="twitter:image" content="https://kdynt17.github.io/quiet-class-seat-survey/og.png" />
     <link rel="canonical" href="https://kdynt17.github.io/quiet-class-seat-survey/" />
-    <title>우리 반 자리 투표</title>
+    <title>우리 반 기피 자리 조사</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="topbar">
       <a class="brand" href="#top" aria-label="처음으로">
-        <span class="brand-mark" aria-hidden="true">ㅈ</span>
-        <span>우리 반 자리 투표</span>
+        <span class="brand-mark" aria-hidden="true">싫</span>
+        <span>우리 반 기피 자리 조사</span>
       </a>
-      <div class="save-state"><span class="save-dot"></span> 데이터베이스 없이 이 기기에 저장</div>
+      <div id="sync-state" class="save-state is-connecting"><span class="save-dot"></span><span id="sync-copy">Google Sheets 연결 중</span></div>
     </header>
 
     <main id="top">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="eyebrow">우리 반 희망 자리 조사</p>
-          <h1 id="page-title">내가 앉고 싶은 자리,<br /><em>직접 고르기.</em></h1>
+          <p class="eyebrow">우리 반 기피 자리 조사</p>
+          <h1 id="page-title">내가 가장<br /><em>앉기 싫은 자리.</em></h1>
           <p class="hero-description">
-            가장 원하는 자리부터 27개 책상을 차례로 선택해요. 모든 학생의 희망 순위를
-            함께 계산해, 한 명당 하나씩 겹치지 않게 배치합니다.
+            가장 앉기 싫은 자리를 1순위로 시작해 27개 책상을 모두 골라 주세요.
+            응답은 Google Sheets에 바로 저장되고, 우리 반이 피하고 싶은 자리를 함께 확인할 수 있어요.
           </p>
         </div>
         <aside class="progress-card" aria-label="전체 응답 현황">
-          <p>전체 응답 현황</p>
+          <p>Google Sheets 응답 현황</p>
           <strong><span id="response-count">0</span><small>/ 27명</small></strong>
           <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
-          <span id="progress-copy">첫 번째 응답을 기다리고 있어요</span>
+          <span id="progress-copy">시트에서 응답을 불러오는 중이에요</span>
         </aside>
       </section>
 
-      <nav class="steps two-steps" aria-label="투표 단계">
+      <nav class="steps two-steps" aria-label="조사 단계">
         <button class="step is-active" type="button" data-view="ranking">
-          <span>01</span><strong>원하는 자리</strong><small>1~27순위 선택</small>
+          <span>01</span><strong>싫은 자리 순위</strong><small>1~27순위 선택</small>
         </button>
         <button class="step" type="button" data-view="results">
-          <span>02</span><strong>공정 배치</strong><small>전체 결과 확인</small>
+          <span>02</span><strong>기피 자리 추천</strong><small>전체 결과 확인</small>
         </button>
       </nav>
 
@@ -72,8 +63,8 @@
           <div class="section-heading">
             <div>
               <p class="section-kicker">STEP 01</p>
-              <h2 id="ranking-title">앉고 싶은 자리 순서</h2>
-              <p>가장 앉고 싶은 자리부터 차례대로 책상을 눌러 주세요.</p>
+              <h2 id="ranking-title">앉기 싫은 자리 순서</h2>
+              <p>가장 앉기 싫은 자리부터 차례대로 책상을 눌러 주세요.</p>
             </div>
             <label class="student-select">
               <span>응답자</span>
@@ -84,7 +75,7 @@
           </div>
 
           <div class="instruction-bar">
-            <span class="next-rank"><b id="next-rank">1순위</b> 자리를 골라 주세요</span>
+            <span class="next-rank"><b id="next-rank">1순위</b>로 싫은 자리를 골라 주세요</span>
             <span>남은 자리 <b id="remaining-count">27</b>개</span>
           </div>
 
@@ -99,19 +90,19 @@
         <aside class="ranking-panel">
           <div class="panel-heading">
             <div>
-              <p>나의 희망 순위</p>
+              <p>나의 기피 순위</p>
               <h3><span id="chosen-count">0</span> / 27</h3>
             </div>
             <button id="reset-ranking" class="text-button" type="button">다시 선택</button>
           </div>
           <ol id="ranking-list" class="ranking-list">
-            <li class="empty-ranking">책상을 누르면 희망 순위가 여기에 표시돼요.</li>
+            <li class="empty-ranking">책상을 누르면 기피 순위가 여기에 표시돼요.</li>
           </ol>
           <button id="submit-preference" class="primary-button" type="button" disabled>
-            내 응답 저장하기
-            <span aria-hidden="true">✓</span>
+            Google Sheets에 저장
+            <span aria-hidden="true">↗</span>
           </button>
-          <p class="panel-note">응답자 번호와 27개 자리 순위를 모두 선택하면 저장할 수 있어요.</p>
+          <p class="panel-note">1순위는 가장 싫은 자리입니다. 번호와 27개 순위를 모두 선택하면 저장할 수 있어요.</p>
         </aside>
       </section>
 
@@ -119,38 +110,39 @@
         <div class="results-header">
           <div>
             <p class="section-kicker">STEP 02</p>
-            <h2 id="results-title">우리 반 희망 자리 결과</h2>
-            <p id="results-status">응답이 모일수록 모두의 희망을 더 정확히 반영할 수 있어요.</p>
+            <h2 id="results-title">우리 반 기피 자리 추천</h2>
+            <p id="results-status">Google Sheets의 최신 응답을 기준으로 계산합니다.</p>
           </div>
           <div class="results-actions">
+            <button id="refresh-results" class="secondary-button compact" type="button">새로고침</button>
             <button id="new-response" class="secondary-button compact" type="button">다음 학생 응답</button>
             <button id="print-results" class="primary-button compact" type="button">결과 인쇄</button>
           </div>
         </div>
 
-        <div class="summary-grid" aria-label="투표 요약">
+        <div class="summary-grid" aria-label="조사 요약">
           <article class="summary-card dark">
             <span>완료한 응답</span>
             <strong><b id="summary-responses">0</b> / 27</strong>
             <small id="summary-percent">0% 완료</small>
           </article>
           <article class="summary-card orange">
-            <span>현재 1순위 인기 자리</span>
-            <strong id="top-choice-seat">-</strong>
-            <small id="top-choice-votes">응답을 기다리는 중</small>
+            <span>가장 앉기 싫은 자리</span>
+            <strong id="most-disliked-seat">-</strong>
+            <small id="most-disliked-votes">응답을 기다리는 중</small>
           </article>
           <article class="summary-card lime">
-            <span>자동 배치 만족도</span>
-            <strong id="average-satisfaction">-</strong>
-            <small id="satisfaction-copy">응답을 기다리는 중</small>
+            <span>기피 자리 추천</span>
+            <strong id="avoid-top-three">-</strong>
+            <small>1순위 표와 평균 기피 순위 기준</small>
           </article>
         </div>
 
         <div class="analysis-grid">
           <article class="result-card">
             <div class="card-title-row">
-              <div><span>자리 분석</span><h3>희망 자리 순위</h3></div>
-              <small>1순위 표가 많고 평균 순위가 낮을수록 인기</small>
+              <div><span>자리 분석</span><h3>기피 자리 순위</h3></div>
+              <small>1순위 표가 많고 평균 순위가 낮을수록 더 싫어하는 자리</small>
             </div>
             <div id="seat-result-list" class="result-list empty-result">아직 저장된 응답이 없습니다.</div>
           </article>
@@ -163,63 +155,23 @@
           </article>
         </div>
 
-        <article class="result-card assignment-card">
-          <div class="card-title-row assignment-title">
-            <div>
-              <span>자동 배치</span>
-              <h3>전체 희망을 반영한 중복 없는 자리</h3>
-              <p>각 학생의 희망 순위 합이 가장 작아지도록 계산한 배치입니다. 같은 자리에 두 명이 배정되지 않아요.</p>
-            </div>
-            <span class="provisional-badge" id="provisional-badge">임시 결과</span>
-          </div>
-          <div class="assignment-note"><strong>확정 전 확인</strong> 아직 응답하지 않은 학생이 있으면 결과가 바뀔 수 있습니다.</div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>학생</th><th>배정 자리</th><th>내 희망 순위</th><th>1순위 희망</th></tr></thead>
-              <tbody id="assignment-body"><tr><td colspan="4">응답이 저장되면 자동 배치가 표시됩니다.</td></tr></tbody>
-            </table>
-          </div>
-        </article>
-
-        <article class="share-card">
-          <div class="share-copy">
-            <span>결과 받기</span>
-            <h3>데이터베이스 없이 결과를 이메일로</h3>
-            <p>이메일 주소는 이 기기에만 저장됩니다. 버튼을 누르면 결과가 담긴 이메일 초안이 열리고, 최종 전송은 직접 눌러 주세요.</p>
-          </div>
-          <div class="email-tools">
-            <label>
-              <span>받을 이메일</span>
-              <input id="teacher-email" type="email" inputmode="email" autocomplete="email" placeholder="teacher@example.com" />
-            </label>
-            <div>
-              <button id="email-results" class="primary-button compact" type="button">이메일 초안 열기</button>
-              <button id="save-result-image" class="secondary-button compact" type="button">결과 이미지 저장</button>
-            </div>
-            <small>웹브라우저는 이메일에 파일을 자동 첨부할 수 없어요. 저장한 결과 이미지는 메일에서 직접 첨부해 주세요.</small>
-          </div>
-        </article>
-
-        <article class="data-card">
+        <article class="data-card cloud-card">
           <div>
-            <span>데이터 관리</span>
-            <h3>이 기기에 자동 저장 중</h3>
-            <p>27명이 같은 기기와 브라우저에서 차례로 응답하면 됩니다. JSON 백업으로 다른 기기에 옮기거나 복원할 수 있어요.</p>
+            <span>Google Sheets 연동</span>
+            <h3>모든 기기의 응답을 한곳에 저장</h3>
+            <p id="last-sync">마지막 동기화 기록이 아직 없습니다.</p>
           </div>
-          <div class="data-actions">
-            <button id="export-data" class="secondary-button compact" type="button">JSON 백업</button>
-            <label class="secondary-button compact file-button">백업 복원<input id="import-data" type="file" accept="application/json" /></label>
-            <button id="clear-data" class="danger-button compact" type="button">전체 초기화</button>
-          </div>
+          <a class="secondary-button compact sheet-link" href="https://docs.google.com/spreadsheets/d/1mRvZkd-EwB8kKwULLNuH4Ys-ZmJ716grg3KUtCyyt-g/edit" target="_blank" rel="noopener noreferrer">응답 시트 열기</a>
         </article>
       </section>
     </main>
 
     <footer>
-      <p>결과는 한 가지 참고자료예요. 시력·키·학습 지원이 필요한 경우 선생님이 마지막으로 조정해 주세요.</p>
+      <p>결과는 한 가지 참고자료예요. 학생의 시력·키·학습 지원이 필요한 경우 선생님이 마지막으로 조정해 주세요.</p>
     </footer>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="config.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
