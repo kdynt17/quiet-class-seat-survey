@@ -1,4 +1,3 @@
 window.SEAT_SURVEY_CONFIG = {
-  // Apps Script 웹 앱을 배포한 뒤 /exec 주소로 바꿉니다.
-  appsScriptUrl: "",
+  appsScriptUrl: "https://script.google.com/macros/s/AKfycbzJ7YfDjZO1iQWWnNqFEGT7PvKR-4JrMmvBRONtWkXKTe3o3VGG8H3pTqCjrNFHhRYp/exec",
 };
