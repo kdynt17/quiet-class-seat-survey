@@ -82,7 +82,7 @@ main { overflow: hidden; }
 .classroom { padding: 16px 20px 20px; border-radius: 18px; border: 1px solid #dfd8ca; background: #f6f0e3; }
 .board { width: 76%; height: 9px; margin: 2px auto 6px; border-radius: 2px 2px 8px 8px; background: var(--ink); text-align: center; }
 .board span { position: relative; top: 10px; color: var(--ink-soft); font-size: 10px; letter-spacing: .3em; }
-.teacher-desk { width: 84px; margin: 30px auto 24px; padding: 8px; border: 1px solid #c7bcaa; border-radius: 8px; background: #ddd1be; text-align: center; font-size: 11px; font-weight: 700; }
+.teacher-desk { width: calc((100% - 50px) / 6); min-width: 76px; margin: 30px 0 24px; padding: 8px; border: 1px solid #c7bcaa; border-radius: 8px; background: #ddd1be; text-align: center; font-size: 11px; font-weight: 700; }
 .seat-grid { display: grid; grid-template-columns: repeat(6, minmax(76px, 1fr)); gap: 14px 10px; }
 .seat { position: relative; min-height: 76px; padding: 12px 8px 10px; border: 1px solid #c9c7bb; border-radius: 10px 10px 5px 5px; background: #fffefa; box-shadow: 0 4px 0 #d9d2c5; cursor: pointer; transition: transform .16s ease, border-color .16s ease, background .16s ease; }
 .seat:nth-child(6n + 3) { margin-right: 10px; }
