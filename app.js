@@ -36,8 +36,16 @@ const elements = {
   refreshResults: document.querySelector("#refresh-results"),
   printResults: document.querySelector("#print-results"),
   lastSync: document.querySelector("#last-sync"),
+  chartStatus: document.querySelector("#chart-status"),
+  chartResponseCount: document.querySelector("#chart-response-count"),
+  chartTopSeat: document.querySelector("#chart-top-seat"),
+  chartTopDetail: document.querySelector("#chart-top-detail"),
+  chartSeatGrid: document.querySelector("#chart-seat-grid"),
+  refreshChart: document.querySelector("#refresh-chart"),
+  printChart: document.querySelector("#print-chart"),
+  chartLastSync: document.querySelector("#chart-last-sync"),
   toast: document.querySelector("#toast"),
-  steps: [...document.querySelectorAll(".step")],
+  viewTriggers: [...document.querySelectorAll("[data-view]")],
   views: [...document.querySelectorAll(".view-section")],
 };
 
@@ -122,13 +130,17 @@ async function refreshCloudData({ quiet = false } = {}) {
   state.syncing = true;
   setSyncStatus("connecting", "Google Sheets 동기화 중");
   elements.refreshResults.disabled = true;
+  elements.refreshChart.disabled = true;
   try {
     const payload = await jsonp("results");
     state.responses = normalizeResponses(payload.responses);
     updateProgress();
     renderResults();
+    renderChart();
     const now = new Date();
-    elements.lastSync.textContent = `${now.toLocaleString("ko-KR")}에 Google Sheets와 동기화했습니다.`;
+    const syncMessage = `${now.toLocaleString("ko-KR")}에 Google Sheets와 동기화했습니다.`;
+    elements.lastSync.textContent = syncMessage;
+    elements.chartLastSync.textContent = syncMessage;
     setSyncStatus("online", "Google Sheets 연결됨");
     if (!quiet) showToast("Google Sheets의 최신 응답을 불러왔습니다.");
     return true;
@@ -140,6 +152,7 @@ async function refreshCloudData({ quiet = false } = {}) {
   } finally {
     state.syncing = false;
     elements.refreshResults.disabled = false;
+    elements.refreshChart.disabled = false;
   }
 }
 
@@ -267,16 +280,63 @@ function renderResults() {
   `).join("");
 }
 
+function renderChart() {
+  const { students, seatStats } = calculateResults();
+  const count = students.length;
+
+  elements.chartResponseCount.textContent = count;
+  elements.chartStatus.textContent = count === TOTAL_STUDENTS
+    ? "27명의 응답을 모두 반영한 최종 기피 자리표입니다."
+    : count
+      ? `${count}명의 응답을 반영한 현재 자리표입니다. 새 응답에 따라 순위가 달라질 수 있어요.`
+      : "아직 저장된 응답이 없어 자리 번호만 표시합니다.";
+
+  if (!count) {
+    elements.chartTopSeat.textContent = "-";
+    elements.chartTopDetail.textContent = "응답을 기다리는 중";
+    elements.chartSeatGrid.innerHTML = Array.from({ length: TOTAL_SEATS }, (_, index) => `
+      <article class="stat-seat is-pending" aria-label="${index + 1}번 자리, 집계 대기">
+        <span class="stat-rank">집계 대기</span>
+        <strong>${index + 1}</strong>
+        <span class="stat-votes">1순위 0표</span>
+        <small>평균 -</small>
+      </article>
+    `).join("");
+    return;
+  }
+
+  const topSeat = seatStats[0];
+  elements.chartTopSeat.textContent = `${topSeat.seat}번 자리`;
+  elements.chartTopDetail.textContent = `1순위 ${topSeat.firstDislikeVotes}표 · 평균 ${topSeat.averageRank.toFixed(1)}순위`;
+
+  const statsBySeat = new Map(seatStats.map((stat, index) => [stat.seat, { ...stat, avoidRank: index + 1 }]));
+  elements.chartSeatGrid.innerHTML = Array.from({ length: TOTAL_SEATS }, (_, index) => {
+    const seat = index + 1;
+    const stat = statsBySeat.get(seat);
+    const heatClass = stat.avoidRank <= 5 ? "heat-top" : stat.avoidRank <= 14 ? "heat-mid" : "heat-low";
+    const label = `${seat}번 자리, 기피 ${stat.avoidRank}위, 1순위 ${stat.firstDislikeVotes}표, 평균 ${stat.averageRank.toFixed(1)}순위`;
+    return `
+      <article class="stat-seat ${heatClass}" aria-label="${label}">
+        <span class="stat-rank">기피 ${stat.avoidRank}위</span>
+        <strong>${seat}</strong>
+        <span class="stat-votes">1순위 ${stat.firstDislikeVotes}표</span>
+        <small>평균 ${stat.averageRank.toFixed(1)}위</small>
+      </article>
+    `;
+  }).join("");
+}
+
 function showView(viewName) {
   state.currentView = viewName;
   elements.views.forEach((view) => { view.hidden = view.id !== `${viewName}-view`; });
-  elements.steps.forEach((step) => {
-    const active = step.dataset.view === viewName;
-    step.classList.toggle("is-active", active);
-    step.setAttribute("aria-current", active ? "step" : "false");
+  elements.viewTriggers.forEach((trigger) => {
+    const active = trigger.dataset.view === viewName;
+    trigger.classList.toggle("is-active", active);
+    trigger.setAttribute("aria-current", active ? (trigger.classList.contains("step") ? "step" : "page") : "false");
   });
-  if (viewName === "results") {
-    renderResults();
+  if (viewName === "results" || viewName === "chart") {
+    if (viewName === "results") renderResults();
+    else renderChart();
     refreshCloudData({ quiet: true });
   }
   document.querySelector(".steps").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -344,14 +404,17 @@ elements.submitPreference.addEventListener("click", async () => {
   }
 });
 
-elements.steps.forEach((step) => step.addEventListener("click", () => showView(step.dataset.view)));
+elements.viewTriggers.forEach((trigger) => trigger.addEventListener("click", () => showView(trigger.dataset.view)));
 elements.newResponse.addEventListener("click", startNewResponse);
 elements.refreshResults.addEventListener("click", () => refreshCloudData());
 elements.printResults.addEventListener("click", () => window.print());
+elements.refreshChart.addEventListener("click", () => refreshCloudData());
+elements.printChart.addEventListener("click", () => window.print());
 
 buildStudentOptions();
 buildSeats();
 renderRanking();
 updateProgress();
 renderResults();
+renderChart();
 refreshCloudData({ quiet: true });
