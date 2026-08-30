@@ -194,7 +194,7 @@ tbody td[colspan] { padding: 42px; color: #8c9693; text-align: center; }
 .data-card h3 { font-size: 20px; }
 .data-card p { max-width: 720px; margin: 8px 0 0; color: var(--ink-soft); font-size: 12px; line-height: 1.7; }
 .cloud-card { margin-top: 16px; }
-.sheet-link { text-decoration: none; white-space: nowrap; }
+.private-sheet-badge { flex: 0 0 auto; padding: 9px 13px; border-radius: 99px; background: var(--ink); color: white; font-size: 11px; font-weight: 800; white-space: nowrap; }
 .file-button { position: relative; }
 .file-button input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 

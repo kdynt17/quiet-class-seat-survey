@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260830" />
+    <link rel="stylesheet" href="styles.css?v=20260830-2" />
   </head>
   <body>
     <header class="topbar">
@@ -167,9 +167,9 @@
           <div>
             <span>Google Sheets 연동</span>
             <h3>모든 기기의 응답을 한곳에 저장</h3>
-            <p id="last-sync">마지막 동기화 기록이 아직 없습니다.</p>
+            <p><span id="last-sync">마지막 동기화 기록이 아직 없습니다.</span><br />원본 응답 시트는 선생님 계정에서만 열 수 있습니다.</p>
           </div>
-          <a class="secondary-button compact sheet-link" href="https://docs.google.com/spreadsheets/d/1mRvZkd-EwB8kKwULLNuH4Ys-ZmJ716grg3KUtCyyt-g/edit" target="_blank" rel="noopener noreferrer">응답 시트 열기</a>
+          <span class="private-sheet-badge">교사 전용</span>
         </article>
       </section>
 
@@ -227,9 +227,9 @@
           <div>
             <span>실시간 Google Sheets 집계</span>
             <h3>새 응답도 자리표에 바로 반영</h3>
-            <p id="chart-last-sync">마지막 동기화 기록이 아직 없습니다.</p>
+            <p><span id="chart-last-sync">마지막 동기화 기록이 아직 없습니다.</span><br />원본 응답 시트는 선생님 계정에서만 열 수 있습니다.</p>
           </div>
-          <a class="secondary-button compact sheet-link" href="https://docs.google.com/spreadsheets/d/1mRvZkd-EwB8kKwULLNuH4Ys-ZmJ716grg3KUtCyyt-g/edit" target="_blank" rel="noopener noreferrer">응답 시트 열기</a>
+          <span class="private-sheet-badge">교사 전용</span>
         </article>
       </section>
     </main>
